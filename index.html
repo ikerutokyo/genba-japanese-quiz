@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>現場日本語 音声クイズ</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 16px;
+}
+
+button {
+  width: auto;
+  min-width: 200px;
+  max-width: 90%;
+  padding: 14px 18px;
+  margin: 10px auto;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  display: block;
+  color: #000;
+}
+
+button.correct {
+  background: #b6e7b9;
+  border-color: #2e7d32;
+  font-weight: bold;
+}
+
+button.wrong {
+  background: #f5b7b1;
+  border-color: #c62828;
+  font-weight: bold;
+}
+
+#nextBtn {
+  margin-top: 20px;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🎧 音を聞いてえらんでね</h2>
+
+<p id="counter"></p>
+
+<audio id="audio" controls></audio>
+
+<div id="choices"></div>
+
+<button id="nextBtn" onclick="nextQuestion()">次の問題 ▶︎</button>
+
+<script>
+const questionData = [
+  { audio: "kite.m4a", text: "សូម​មក​ផង" },
+  { audio: "itte.m4a", text: "សូម​ទៅ​ផង" },
+  { audio: "motte.m4a", text: "សូម​យក​ផង" },
+  { audio: "oite.m4a", text: "សូម​ដាក់​ផង" },
+  { audio: "tsukete.m4a", text: "សូម​ដាក់​ផង" },
+  { audio: "totte.m4a", text: "សូម​យក​ផង" },
+  { audio: "yatte.m4a", text: "សូម​ធ្វើ​ផង" },
+  { audio: "kakunin.m4a", text: "សូម​ពិនិត្យ​ផង" },
+  { audio: "check.m4a", text: "សូម​ត្រួតពិនិត្យ​ផង" },
+  { audio: "agatte.m4a", text: "សូម​ឡើង​ផង" },
+  { audio: "orite.m4a", text: "សូម​ចុះ" }
+];
+
+const totalQuestions = 20;
+let currentQuestion = 0;
+let correctCount = 0;
+let currentCorrectText = "";
+
+const audio = document.getElementById("audio");
+const choicesDiv = document.getElementById("choices");
+const nextBtn = document.getElementById("nextBtn");
+const counter = document.getElementById("counter");
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function loadQuestion() {
+  choicesDiv.innerHTML = "";
+  nextBtn.style.display = "none";
+
+  counter.textContent = `問題 ${currentQuestion + 1} / ${totalQuestions}`;
+
+  const correct =
+    questionData[Math.floor(Math.random() * questionData.length)];
+  currentCorrectText = correct.text;
+
+  audio.src = correct.audio;
+  audio.load();
+
+  const wrongs = shuffle(
+    questionData.filter(q => q.text !== correct.text)
+  ).slice(0, 2);
+
+  const options = shuffle([correct, ...wrongs]);
+
+  options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.textContent = option.text;
+    btn.onclick = () =>
+      checkAnswer(btn, option.text === currentCorrectText);
+    choicesDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(button, isCorrect) {
+  const buttons = document.querySelectorAll("#choices button");
+
+  // すべてのボタンを無効化
+  buttons.forEach(btn => (btn.disabled = true));
+
+  if (isCorrect) {
+    button.classList.add("correct");
+    button.textContent = "⭕️ " + button.textContent;
+    correctCount++;
+  } else {
+    button.classList.add("wrong");
+    button.textContent = "✖️ " + button.textContent;
+
+    // 正解を表示
+    buttons.forEach(btn => {
+      if (btn.textContent === currentCorrectText) {
+        btn.classList.add("correct");
+        btn.textContent = "⭕️ " + btn.textContent;
+      }
+    });
+  }
+
+  nextBtn.style.display = "block";
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion >= totalQuestions) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  document.body.innerHTML = `
+    <h2>🎉 おつかれさま！</h2>
+    <p style="font-size:22px;">
+      ${totalQuestions}問中 <strong>${correctCount}</strong> 問 正解！
+    </p>
+  `;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
