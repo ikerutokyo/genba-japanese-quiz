@@ -12,30 +12,37 @@ body {
 }
 
 h2 {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 #counter {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 14px;
   color: #555;
 }
 
-/* ▶︎ 再生ボタン */
+/* ▶︎ 再生ボタン（白） */
 #playBtn {
-  margin: 20px auto 10px;
-  width: 80px;
-  height: 80px;
-  font-size: 42px;
-  border-radius: 50%;
-  border: 2px solid #333;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 18px auto 22px;
+  min-width: 140px;     /* 選択肢より少し細い */
+  max-width: 60%;
+  padding: 16px;
+  font-size: 32px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background: #ffffff; /* ← 白 */
+  display: block;
+  position: relative;
+  z-index: 10;
 }
 
-/* 選択肢 */
+/* 選択肢エリア */
+#choices {
+  position: relative;
+  z-index: 1;
+}
+
+/* 選択肢ボタン（グレー） */
 #choices button {
   min-width: 200px;
   max-width: 90%;
@@ -61,9 +68,9 @@ button.wrong {
   font-weight: bold;
 }
 
-/* 次の問題 */
+/* 次の問題ボタン */
 #nextBtn {
-  margin: 20px auto 0;
+  margin: 22px auto 0;
   padding: 14px 20px;
   font-size: 18px;
   border-radius: 12px;
@@ -79,13 +86,10 @@ button.wrong {
 
 <audio id="audio"></audio>
 
-<!-- 再生ボタン -->
 <button id="playBtn" onclick="playAudio()">▶︎</button>
 
-<!-- 選択肢 -->
 <div id="choices"></div>
 
-<!-- 次の問題（選択肢の下） -->
 <button id="nextBtn" onclick="nextQuestion()">次の問題 ▶︎</button>
 
 <script>
@@ -93,13 +97,13 @@ const questionData = [
   { audio: "kite.m4a", text: "សូម​មក​ផង" },
   { audio: "itte.m4a", text: "សូម​ទៅ​ផង" },
   { audio: "motte.m4a", text: "សូម​យក​ផង" },
-  { audio: "oite.m4a", text: "សូម​ដាក់​ផong" },
-  { audio: "tsukete.m4a", text: "សូម​ដាក់​ផong" },
-  { audio: "totte.m4a", text: "សូម​យក​ផong" },
-  { audio: "yatte.m4a", text: "សូម​ធ្វើ​ផong" },
-  { audio: "kakunin.m4a", text: "សូម​ពិនិត្យ​ផong" },
-  { audio: "check.m4a", text: "សូម​ត្រួតពិនិត្យ​ផong" },
-  { audio: "agatte.m4a", text: "សូម​ឡើង​ផong" },
+  { audio: "oite.m4a", text: "សូម​ដាក់​ផង" },
+  { audio: "tsukete.m4a", text: "សូម​ដាក់​ផង" },
+  { audio: "totte.m4a", text: "សូម​យក​ផង" },
+  { audio: "yatte.m4a", text: "សូម​ធ្វើ​ផង" },
+  { audio: "kakunin.m4a", text: "សូម​ពិនិត្យ​ផង" },
+  { audio: "check.m4a", text: "សូម​ត្រួតពិនិត្យ​ផង" },
+  { audio: "agatte.m4a", text: "សូម​ឡើង​ផង" },
   { audio: "orite.m4a", text: "សូម​ចុះ" }
 ];
 
