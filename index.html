@@ -12,11 +12,31 @@ body {
 }
 
 h2 {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
-button {
-  width: auto;
+#counter {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* ▶︎ 再生ボタン */
+#playBtn {
+  margin: 20px auto 10px;
+  width: 80px;
+  height: 80px;
+  font-size: 42px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 選択肢 */
+#choices button {
   min-width: 200px;
   max-width: 90%;
   padding: 14px 18px;
@@ -41,8 +61,12 @@ button.wrong {
   font-weight: bold;
 }
 
+/* 次の問題 */
 #nextBtn {
-  margin-top: 20px;
+  margin: 20px auto 0;
+  padding: 14px 20px;
+  font-size: 18px;
+  border-radius: 12px;
   display: none;
 }
 </style>
@@ -51,13 +75,17 @@ button.wrong {
 <body>
 
 <h2>🎧 音を聞いてえらんでね</h2>
-
 <p id="counter"></p>
 
-<audio id="audio" controls></audio>
+<audio id="audio"></audio>
 
+<!-- 再生ボタン -->
+<button id="playBtn" onclick="playAudio()">▶︎</button>
+
+<!-- 選択肢 -->
 <div id="choices"></div>
 
+<!-- 次の問題（選択肢の下） -->
 <button id="nextBtn" onclick="nextQuestion()">次の問題 ▶︎</button>
 
 <script>
@@ -65,13 +93,13 @@ const questionData = [
   { audio: "kite.m4a", text: "សូម​មក​ផង" },
   { audio: "itte.m4a", text: "សូម​ទៅ​ផង" },
   { audio: "motte.m4a", text: "សូម​យក​ផង" },
-  { audio: "oite.m4a", text: "សូម​ដាក់​ផង" },
-  { audio: "tsukete.m4a", text: "សូម​ដាក់​ផង" },
-  { audio: "totte.m4a", text: "សូម​យក​ផង" },
-  { audio: "yatte.m4a", text: "សូម​ធ្វើ​ផង" },
-  { audio: "kakunin.m4a", text: "សូម​ពិនិត្យ​ផង" },
-  { audio: "check.m4a", text: "សូម​ត្រួតពិនិត្យ​ផង" },
-  { audio: "agatte.m4a", text: "សូម​ឡើង​ផង" },
+  { audio: "oite.m4a", text: "សូម​ដាក់​ផong" },
+  { audio: "tsukete.m4a", text: "សូម​ដាក់​ផong" },
+  { audio: "totte.m4a", text: "សូម​យក​ផong" },
+  { audio: "yatte.m4a", text: "សូម​ធ្វើ​ផong" },
+  { audio: "kakunin.m4a", text: "សូម​ពិនិត្យ​ផong" },
+  { audio: "check.m4a", text: "សូម​ត្រួតពិនិត្យ​ផong" },
+  { audio: "agatte.m4a", text: "សូម​ឡើង​ផong" },
   { audio: "orite.m4a", text: "សូម​ចុះ" }
 ];
 
@@ -87,6 +115,11 @@ const counter = document.getElementById("counter");
 
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
+}
+
+function playAudio() {
+  audio.currentTime = 0;
+  audio.play();
 }
 
 function loadQuestion() {
@@ -119,8 +152,6 @@ function loadQuestion() {
 
 function checkAnswer(button, isCorrect) {
   const buttons = document.querySelectorAll("#choices button");
-
-  // すべてのボタンを無効化
   buttons.forEach(btn => (btn.disabled = true));
 
   if (isCorrect) {
@@ -131,7 +162,6 @@ function checkAnswer(button, isCorrect) {
     button.classList.add("wrong");
     button.textContent = "✖️ " + button.textContent;
 
-    // 正解を表示
     buttons.forEach(btn => {
       if (btn.textContent === currentCorrectText) {
         btn.classList.add("correct");
@@ -147,19 +177,15 @@ function nextQuestion() {
   currentQuestion++;
 
   if (currentQuestion >= totalQuestions) {
-    showResult();
+    document.body.innerHTML = `
+      <h2>🎉 おつかれさま！</h2>
+      <p style="font-size:22px;">
+        ${totalQuestions}問中 <strong>${correctCount}</strong> 問 正解！
+      </p>
+    `;
   } else {
     loadQuestion();
   }
-}
-
-function showResult() {
-  document.body.innerHTML = `
-    <h2>🎉 おつかれさま！</h2>
-    <p style="font-size:22px;">
-      ${totalQuestions}問中 <strong>${correctCount}</strong> 問 正解！
-    </p>
-  `;
 }
 
 loadQuestion();
